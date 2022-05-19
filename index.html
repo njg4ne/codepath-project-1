@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Flixter</title>
     <link rel="SHORTCUT ICON" href="favicon.ico" type="image/x-icon" />
     <link rel=" bookmark" href="favicon.ico" type="image/x-icon" /> 
     <link rel="stylesheet" href="style.css">
@@ -21,31 +21,25 @@
         <form onsubmit="return do_search()">
             <input id="search-box" type="text" name="search" placeholder="Search movies">
             <button id="search-btn" class="material-icons icon-btn" type="submit">search</button>
+            <button id="back-btn" class="material-icons icon-btn">keyboard_return</button>
         </form>
     </header>
     <main>
         
         <div class="flex-row" id="movies-grid">
-            <!-- <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div>
-            <div class="box"></div> -->
+
         </div>
         <div class="filler"></div>
     </main>
     <footer class="flex-row"></footer>
     <div class="modal closed">
         <div class="shade"></div>
-        <div class="shade"> </div>
-        <div class="modal-canvas"> <button class="material-icons icon-btn" id="modal-close-btn">close</button></div>
+        <div class="modal-canvas"> 
+            <div id="modal-bar">
+                <button class="material-icons icon-btn" id="modal-close-btn">close</button>
+            </div>
+            <div id="movie-detail"></div>
+        </div>
        
     </div>
 </body>

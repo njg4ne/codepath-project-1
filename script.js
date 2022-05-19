@@ -1,4 +1,3 @@
-
 String.prototype.urlFriendly = function() {
     return this.replace(/ /g, '+');
 }
@@ -10,6 +9,7 @@ API = {
        current: "/movie/now_playing",
        search: "/search/movie",
        config: "/configuration",
+       movie: "/movie/"
    },
    pref: {
        query: "&query=",
@@ -29,6 +29,8 @@ API.query_str = function(q) { return this.pref.query + q.urlFriendly(); }
 language = "en-US"
 visible_movies = undefined
 end_movie_page = 0
+page_mode = "current"
+last_fetch_size = undefined
 
 // Add a string method to replace spaces with +
 
@@ -46,12 +48,19 @@ async function search_movies(args) {
     return do_query(url)
 }
 
-async function current_movies(page, lang=language, region=undefined ) {
+async function get_current_movies(page, lang=language, region=undefined ) {
     url = API.base + API.get.current + API.key_str()
     url += API.pref.lang + lang + API.pref.page + page
 
     if (region) {url += API.pref.region + region}
-    //console.log(url);
+    return do_query(url)
+}
+
+async function get_movie_details(id, lang=language){
+    if (!id) { throw "Cannot fetch movie details without an id."}
+    append = 
+    url = API.base + API.get.movie + id + API.key_str()
+    url += API.pref.lang + lang + `&append_to_response=${false}`
     return do_query(url)
 }
 
@@ -75,14 +84,12 @@ API.poster_url = (path) => {
 function do_search() {
     q = document.getElementById("search-box").value
     if (!q) {return false;}
+    page_mode = "search"
     document.querySelector("header > h2").innerHTML = "Search Results"
     
-    
-    console.log(q.urlFriendly())
     clear_visible_movies()
     append_search_result_page(q).then((movies) => {
-        rendpend_movies(movies)
-        console.log(visible_movies.length);
+        rendpend_movies(movies);
     })
     return false
 }
@@ -95,28 +102,39 @@ async function do_query(url) {
 function render_load_button() {
     id = "load-more-btn"
     html = `<button type="submit" id="${id}">Load More Results</button>`
+    html += `<img id="attribution" src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_1-8ba2ac31f354005783fab473602c34c3f4fd207150182061e425d366e4f34596.svg">powers this site</img>`
     document.querySelector("footer").innerHTML = html
     document.querySelector(`#${id}`).addEventListener("click", () => {
-        append_movie_page().then(rendpend_movies)
+        if (page_mode == "search") {
+            if (last_fetch_size == 20) {
+                append_search_result_page(document.getElementById("search-box").value).then(rendpend_movies)
+            }
+        } else {
+            append_movie_page().then(rendpend_movies)
+        }
+        
     })
 }
 
+
+
 async function fetch_page_of_movies(page) {
     if (!API.config) { throw "API configuration must be fetched before loading movies."}
-    visible_movies = await current_movies(page = page).then(rsp => rsp.results);
-    return visible_movies
+    movies = await get_current_movies(page = page).then(rsp => rsp.results);
+    return movies.map(({id, title, poster_path, vote_average}) => ({id, title, poster_path, vote_average}))
 }
 
 async function fetch_page_of_search_results(page, q) {
     if (!API.config) { throw "API configuration must be fetched before loading movies."}
-    visible_movies = await search_movies({q:q, page:page}).then(rsp => rsp.results);
-    return visible_movies
+    movies = await search_movies({q:q, page:page}).then(rsp => rsp.results);
+    return movies.map(({id, title, poster_path, vote_average}) => ({id, title, poster_path, vote_average}))
 }
 
 async function append_search_result_page(q) {
     end_movie_page += 1
     new_movies = await fetch_page_of_search_results(end_movie_page, q);
     visible_movies = [...visible_movies, ...new_movies]
+    last_fetch_size = new_movies.length
     return new_movies
 }
 
@@ -124,6 +142,7 @@ async function append_movie_page() {
     end_movie_page += 1
     new_movies = await fetch_page_of_movies(end_movie_page);
     visible_movies = [...visible_movies, ...new_movies]
+    last_fetch_size = new_movies.length
     return new_movies
 }
 
@@ -138,15 +157,75 @@ function clear_visible_movies() {
     document.getElementById("movies-grid").innerHTML = "";
 }
 
+star_code = "&#11088"
+function movie_preview_html(movie) {
+    
+    rating = `<span>${star_code} ${movie.vote_average}</span>`
+    id = `movie-${movie.id}`
+    poster = `<img class="poster" src="${API.poster_url(movie.poster_path)}" alt="Movie Poster: ${movie.title}">`
+    html = `<div class= "movie" id="${id}">
+    ${poster}
+    ${rating}
+    <h4>${movie.title}</h4>        
+    </div>`
+    return html
+}
+
+async function render_movie_details(id, modal_canvas) {
+    movie = await get_movie_details(id);
+    backdrop = `<img class="backdrop" src="${API.poster_url(movie.backdrop_path)}" alt="Movie Backdrop: ${movie.title}">`
+    title = `<h3>${movie.title}</h3>`;
+    subtitle = `<h5>${movie.runtime} min | ${movie.release_date} | ${movie.release_date} | genres | ${star_code} ${movie.vote_average}</h5>`
+    description = `<p>${movie.overview}</p>`
+    modal_canvas.innerHTML = backdrop + title + subtitle + description 
+}
+
+function open_movie(id) {
+    modal = document.querySelector(".modal");
+    render_movie_details(id, modal.querySelector("#movie-detail"));
+
+    modal.classList.remove("closed");
+    modal.classList.add("open");
+    
+}
+function close_movie() {
+    document.querySelector("#movie-detail").innerHTML = ''
+    modal.classList.remove("open");
+    modal.classList.add("closed");
+} 
+
 function rendpend_movies(movies) {
     movies.forEach(e => {
-        document.querySelector("main > .flex-row").innerHTML += `<img class="box" src="${API.poster_url(e.poster_path)}" alt="Movie Poster: ${e.title}">`
+        document.querySelector("main > .flex-row").innerHTML += movie_preview_html(e);
+        // document.querySelector(`.flex-row > #movie-${e.id} > img`).addEventListener("click", doit)
     });
+    movies.forEach(m => {
+        element = document.getElementById(`movie-${m.id}`);
+        element.addEventListener("click", () => open_movie(m.id))
+    })
+
+}
+
+function add_event_listeners() {
+    modal_close = document.querySelector("#modal-close-btn")
+    shade = document.querySelector(".shade")
+    modal_close.addEventListener("click", close_movie)
+    shade.addEventListener("click", close_movie)
+
+    back = document.getElementById("back-btn")
+    back.addEventListener("click", () => {
+        page_mode = "current"
+        document.querySelector("header > h2").innerHTML = "Current Movies";
+        document.getElementById("search-box").value = "";
+        reset_movies().then
+    })
 }
 
 window.onload = () => {
     get_config()
+    .then(() => add_event_listeners())
     .then(() => reset_movies())
     .then((movies) => rendpend_movies(movies))
     .then(() => render_load_button())
+    
 }

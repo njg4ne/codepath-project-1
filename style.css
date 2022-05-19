@@ -4,9 +4,11 @@
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
     color: white;
+    --poster-base: calc(max(calc(8vw), calc(8em)));
+    --accent-color: white
 }
 ::placeholder {
-    color: rgb(215, 242, 255);
+    color: var(--accent-color);
 }
 :focus {
     outline: none;
@@ -26,7 +28,7 @@ h2 {
     font-size: 1.25em;
     padding-bottom: .5rem;
     padding-left: 0.2em;
-    color: rgb(215, 242, 255);
+    color: var(--accent-color);
 }
 
 header {
@@ -44,22 +46,24 @@ header > form {
     align-items: center;
     flex: 1;
     max-width: 35em;
+    margin-right: 0.5em;
 }
 #search-box {
     padding: 0.5em 0.75em;
     margin: 0 0.5em;
-    flex: 1;
+    flex: 20;
     background-color: black;
     color: white;
 }
 .icon-btn {
-    margin-right: 1em;
+    margin: 0;
+    margin-right: .25em;
     font-size: 1.5em;
     opacity: 1;
     padding: 0;
-    height: min-content;
     padding: .15em .25em;
-    
+    margin-bottom: 0;
+    flex: 0;
     border-radius: 0.25em;
 }
 
@@ -82,14 +86,38 @@ footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-content: flex-start;
     padding: 10px;
 }
 
-.flex-row > .box {
-    height: calc(max(calc(01vw), calc(10rem)));
-    border: 2px solid white;
-    margin: 10px;
+.flex-row > .movie {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: max-content;
+    padding: 1em
 }
+.movie > h4, .movie > span {
+    width: var(--poster-base);
+    margin: 0.15em;
+}
+.poster {
+    
+    width: calc(var(--poster-base));
+    border: 2px solid white;
+}
+
+.backdrop {
+    width: 60%;
+    
+}
+#movie-detail > p, #movie-detail > h5, #movie-detail > h3 {
+    color: black;
+}
+#movie-detail > h3 {
+    font-size: 1.25em;
+}
+
 
 main > .filler {
     flex: 1;
@@ -105,11 +133,12 @@ button {
     border-radius: 0.5rem;
 }
 
-button:hover, .flex-row > .box:hover {
+button:hover, .flex-row > .movie:hover {
     transform: scale(1.1);
 }
 
-button:hover,button:focus {
+
+button:hover {
     transform: scale(0.9);
     background-color: rgb(70, 70, 70);
 }
@@ -144,12 +173,20 @@ button:hover,button:focus {
 }
 .modal-canvas {
     width: 75%;
-    height: 50%;
     opacity: 1;
     background: #fff;
     border-radius: 1em;
     position: absolute;
-    padding: 30px;
+    padding: 1em;
+    color: black;
+    display: flex;
+    flex-direction: column;
+
+}
+.modal-canvas > #movie-detail {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
 }
 .modal-close {
       position: absolute;
@@ -164,6 +201,11 @@ button:hover,button:focus {
       cursor: pointer;
 }
 
+#modal-bar {
+    display: flex;
+    justify-content: flex-end;
+}
+
   @media screen and (max-width: 600px) {
     .topnav a, .topnav input[type=text] {
       float: none;
@@ -176,4 +218,11 @@ button:hover,button:focus {
     .topnav input[type=text] {
       border: 1px solid #ccc;
     }
+  }
+
+  #attribution {
+      width: 33%;
+      margin: 33%;
+      margin-top: 1em;
+      margin-bottom: 1em;
   }
