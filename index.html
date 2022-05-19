@@ -17,14 +17,15 @@
 <body>
     <header>
         <h1>Flixter</h1>
-        <form action="">
+        <h2>Current Movies</h2>
+        <form onsubmit="return do_search()">
             <input id="search-box" type="text" name="search" placeholder="Search movies">
-            <button id="search-btn" class="material-icons icon-btn">search</button>
+            <button id="search-btn" class="material-icons icon-btn" type="submit">search</button>
         </form>
     </header>
     <main>
         
-        <div class="flex-row">
+        <div class="flex-row" id="movies-grid">
             <!-- <div class="box"></div>
             <div class="box"></div>
             <div class="box"></div>

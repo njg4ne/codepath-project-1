@@ -24,7 +24,7 @@ API = {
    config: undefined
 }
 API.key_str = function() { return this.pref.key + this.key }
-API.query_str = function(q) { return this.pref.query + q.urlFriendly; }
+API.query_str = function(q) { return this.pref.query + q.urlFriendly(); }
 
 language = "en-US"
 visible_movies = undefined
@@ -43,7 +43,6 @@ async function search_movies(args) {
     if (args.region) {url += API.pref.region + args.region}
     if (args.year) {url += API.pref.year + args.year}
     if (args.py_year) {url += API.pref.py_year + args.py_year}
-
     return do_query(url)
 }
 
@@ -73,6 +72,21 @@ API.poster_url = (path) => {
     return url
 }
 
+function do_search() {
+    q = document.getElementById("search-box").value
+    if (!q) {return false;}
+    document.querySelector("header > h2").innerHTML = "Search Results"
+    
+    
+    console.log(q.urlFriendly())
+    clear_visible_movies()
+    append_search_result_page(q).then((movies) => {
+        rendpend_movies(movies)
+        console.log(visible_movies.length);
+    })
+    return false
+}
+
 async function do_query(url) {
     return fetch(url)
         .then(response => response.json())
@@ -93,6 +107,19 @@ async function fetch_page_of_movies(page) {
     return visible_movies
 }
 
+async function fetch_page_of_search_results(page, q) {
+    if (!API.config) { throw "API configuration must be fetched before loading movies."}
+    visible_movies = await search_movies({q:q, page:page}).then(rsp => rsp.results);
+    return visible_movies
+}
+
+async function append_search_result_page(q) {
+    end_movie_page += 1
+    new_movies = await fetch_page_of_search_results(end_movie_page, q);
+    visible_movies = [...visible_movies, ...new_movies]
+    return new_movies
+}
+
 async function append_movie_page() {
     end_movie_page += 1
     new_movies = await fetch_page_of_movies(end_movie_page);
@@ -101,9 +128,14 @@ async function append_movie_page() {
 }
 
 async function reset_movies() {
-    end_movie_page = 0
+    clear_visible_movies()
     await append_movie_page()
     return visible_movies
+}
+function clear_visible_movies() {
+    end_movie_page = 0
+    visible_movies = []
+    document.getElementById("movies-grid").innerHTML = "";
 }
 
 function rendpend_movies(movies) {
@@ -113,23 +145,8 @@ function rendpend_movies(movies) {
 }
 
 window.onload = () => {
-    //console.log("a b c".urlFriendly());
-    // search_url({q:"King of Staten Island", page:1,})
-
     get_config()
     .then(() => reset_movies())
     .then((movies) => rendpend_movies(movies))
-    // .then(
-    //     () => {
-    //         visible_movies = visible_movies.map( ({title, id, poster_path}) => ({title, id, poster_path})   )
-    //         //console.log(visible_movies);
-    //         visible_movies.forEach(e => {
-    //             document.querySelector("main > .flex-row").innerHTML += `<img class="box" src="${API.poster_url(e.poster_path)}" alt="Movie Poster: ${e.title}">`
-    //         });
-    //     }
-    // )
     .then(() => render_load_button())
-    
-    // query("Jack+Reacher")
-    // document.querySelector("body").innerHTML += "hi"
 }
