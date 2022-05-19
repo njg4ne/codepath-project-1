@@ -5,13 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="SHORTCUT ICON" href="favicon.ico" type="image/x-icon" />
+    <link rel=" bookmark" href="favicon.ico" type="image/x-icon" /> 
     <link rel="stylesheet" href="style.css">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 </head>
 <body>
-    <header></header>
+    <header>
+        <h1>Flixter</h1>
+        <form action="">
+            <input id="search-box" type="text" name="search" placeholder="Search movies">
+            <button id="search-btn" class="material-icons icon-btn">search</button>
+        </form>
+    </header>
     <main>
-        <div class="flex-container">
+        
+        <div class="flex-row">
             <!-- <div class="box"></div>
             <div class="box"></div>
             <div class="box"></div>
@@ -25,9 +38,17 @@
             <div class="box"></div>
             <div class="box"></div> -->
         </div>
+        <div class="filler"></div>
     </main>
-    <footer></footer>
-    
+    <footer class="flex-row"></footer>
+    <div class="modal closed">
+        <div class="shade"></div>
+        <div class="shade"> </div>
+        <div class="modal-canvas"> <button class="material-icons icon-btn" id="modal-close-btn">close</button></div>
+       
+    </div>
 </body>
 </html>
 <script src="script.js"></script>
+
+
