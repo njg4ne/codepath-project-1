@@ -5,7 +5,7 @@
     font-size: 16px;
     color: white;
     --poster-base: calc(max(calc(8vw), calc(8em)));
-    --accent-color: white
+    --accent-color: white;
 }
 ::placeholder {
     color: var(--accent-color);
@@ -97,6 +97,9 @@ footer {
     width: max-content;
     padding: 1em
 }
+.trailer {
+    margin: 0.5em 0 0 0;
+}
 .movie > h4, .movie > span {
     width: var(--poster-base);
     margin: 0.15em;
@@ -108,11 +111,27 @@ footer {
 }
 
 .backdrop {
-    width: 60%;
+    --max-base : calc(min(calc(75vh), calc(3in)));
+    --min-base : 100px;
+    --base : 25vw;
+    --high: calc(9/5);
+    --wide: calc(16/5);
+
+    height: calc(var(--base)*var(--high));
+    width: calc(var(--base)*var(--wide));
+
+    max-height: calc(var(--max-base)*var(--high));
+    max-width: calc(var(--max-base)*var(--wide));
+
+    min-height: calc(var(--min-base)*var(--high));
+    min-width: calc(var(--min-base)*var(--wide));
+    overflow: scroll;
+    margin: 0.5em 0;
     
 }
 #movie-detail > p, #movie-detail > h5, #movie-detail > h3 {
     color: black;
+    padding: 0.25em 0;
 }
 #movie-detail > h3 {
     font-size: 1.25em;
@@ -172,7 +191,7 @@ button:hover {
     padding: 30px;
 }
 .modal-canvas {
-    width: 75%;
+    width: min-content;
     opacity: 1;
     background: #fff;
     border-radius: 1em;
@@ -181,6 +200,8 @@ button:hover {
     color: black;
     display: flex;
     flex-direction: column;
+    max-height: 75vh;
+    overflow-y: scroll;
 
 }
 .modal-canvas > #movie-detail {
@@ -221,8 +242,12 @@ button:hover {
   }
 
   #attribution {
-      width: 33%;
-      margin: 33%;
+      width: 270px;
       margin-top: 1em;
       margin-bottom: 1em;
+  }
+  #footer-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
   }
