@@ -122,7 +122,7 @@ API.image_url = (path, type="poster") => {
 }
 
 function do_search() {
-    q = document.getElementById("search-box").value
+    q = document.getElementById("search-input").value
     if (!q) {return false;}
     page_mode = "search"
     document.querySelector("header > h2").innerHTML = "Search Results"
@@ -140,7 +140,7 @@ async function do_query(url) {
 }
 
 function render_load_button() {
-    id = "load-more-btn"
+    id = "load-more-movies-btn"
     html = `<button type="submit" id="${id}">Load More Results</button>`
     html += `<img id="attribution" src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_1-8ba2ac31f354005783fab473602c34c3f4fd207150182061e425d366e4f34596.svg"></img>`
     html = `<div id="footer-col">${html}</div>`
@@ -148,7 +148,7 @@ function render_load_button() {
     document.querySelector(`#${id}`).addEventListener("click", () => {
         if (page_mode == "search") {
             if (last_fetch_size == 20) {
-                append_search_result_page(document.getElementById("search-box").value).then(rendpend_movies)
+                append_search_result_page(document.getElementById("search-input").value).then(rendpend_movies)
             }
         } else {
             append_movie_page().then(rendpend_movies)
@@ -201,13 +201,13 @@ function clear_visible_movies() {
 star_code = "&#11088"
 function movie_preview_html(movie) {
     
-    rating = `<span>${star_code} ${movie.vote_average}</span>`
+    rating = `<span class="movie-votes">${star_code} ${movie.vote_average}</span>`
     id = `movie-${movie.id}`
-    poster = `<img class="poster" src="${API.image_url(movie.poster_path)}" alt="Movie Poster: ${movie.title}">`
-    html = `<div class= "movie" id="${id}">
+    poster = `<img class="movie-poster" src="${API.image_url(movie.poster_path)}" alt="Movie Poster: ${movie.title}">`
+    html = `<div class= "movie-card" id="${id}">
     ${poster}
     ${rating}
-    <h4>${movie.title}</h4>        
+    <h4 class="movie-title">${movie.title}</h4>        
     </div>`
     return html
 }
@@ -268,11 +268,11 @@ function add_event_listeners() {
     modal_close.addEventListener("click", close_movie)
     shade.addEventListener("click", close_movie)
 
-    back = document.getElementById("back-btn")
+    back = document.getElementById("close-search-btn")
     back.addEventListener("click", () => {
         page_mode = "current"
         document.querySelector("header > h2").innerHTML = "Current Movies";
-        document.getElementById("search-box").value = "";
+        document.getElementById("search-input").value = "";
         reset_movies().then((movies) => rendpend_movies(movies))
     })
 }

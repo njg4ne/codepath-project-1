@@ -48,7 +48,7 @@ header > form {
     max-width: 35em;
     margin-right: 0.5em;
 }
-#search-box {
+#search-input {
     padding: 0.5em 0.75em;
     margin: 0 0.5em;
     flex: 20;
@@ -90,7 +90,7 @@ footer {
     padding: 10px;
 }
 
-.flex-row > .movie {
+.flex-row > .movie-card {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -100,11 +100,11 @@ footer {
 .trailer {
     margin: 0.5em 0 0 0;
 }
-.movie > h4, .movie > span {
+.movie-card > h4, .movie-card > span {
     width: var(--poster-base);
     margin: 0.15em;
 }
-.poster {
+.movie-poster {
     
     width: calc(var(--poster-base));
     border: 2px solid white;
@@ -152,7 +152,7 @@ button {
     border-radius: 0.5rem;
 }
 
-button:hover, .flex-row > .movie:hover {
+button:hover, .flex-row > .movie-card:hover {
     transform: scale(1.1);
 }
 
