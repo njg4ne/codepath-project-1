@@ -42,13 +42,12 @@ Deployed Application (optional): [Flixster Deployed Site](ADD_LINK_HERE)
 
 ### Walkthrough Video
 
-`TODO://` Add the embedded URL code to your animated app walkthrough below, `ADD_EMBEDDED_CODE_HERE`. Make sure the video or gif actually renders and animates when viewing this README. (🚫 Remove this paragraph after adding walkthrough video)
+https://user-images.githubusercontent.com/89935777/169823715-fd02db8c-f6d8-4530-91bf-10f79c4a302c.mp4
 
-`ADD_EMBEDDED_CODE_HERE`
-
-<iframe class="backdrop" src="https://img.youtube.com/embed/hd7fFDlDNw8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[Scrubbable Longer Video](https://www.youtube.com/watch?v=hd7fFDlDNw8&ab_channel=niqwis)
 
 ### Reflection
+
 
 * Did the topics discussed in your labs prepare you to complete the assignment? Be specific, which features in your weekly assignment did you feel unprepared to complete?
 
